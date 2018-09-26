@@ -9,16 +9,28 @@ class HashTable {
   }
 
   getHashFunction(item) {
-    return stringHash(item);
+    return Buffer.byteLength(item, 'utf8') % this.size;
   }
 
   seekSlot(item) {
+
+    let slot = this.getHashFunction(item);
+
+    if (this.storage[slot]) {
+      do {
+        slot += this.step;
+
+      }
+      while (this.storage[slot])
+    }
+
+    return slot;
 
   }
 
   put(item) {
     if (Object.keys(this.storage).length >= 0 && Object.keys(this.storage).length < this.size) {
-      this.storage[this.getHashFunction(item)] = item;
+      this.storage[this.seekSlot(item)] = item;
     }
 
   }
