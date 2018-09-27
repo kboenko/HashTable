@@ -49,6 +49,10 @@ class HashTable {
           slot += this.step;
           count ++;
 
+          if (slot > this.size) {
+            slot -= this.size;
+          }
+
           if (count === this.size) {
             return 'Элемент не найден'
           }
