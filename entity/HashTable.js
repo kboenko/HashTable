@@ -7,7 +7,12 @@ class HashTable {
   }
 
   getHashFunction(item) {
-    return Buffer.byteLength(item, 'utf8') % this.size;
+    let hash = 0;
+    for (let i = 0; i < item.length; i++) {
+      hash = (hash << 5) - hash + item.charCodeAt(i);
+      hash = hash >>> 0;  // преобразование в 23-битное беззнаковое целое число
+    }
+    return Math.abs(hash % this.size) + 1;
   }
 
   seekSlot(item) {
