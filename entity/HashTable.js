@@ -9,7 +9,7 @@ class HashTable {
   getHashFunction(item) {
     let hash = 0;
     for (let i = 0; i < item.length; i++) {
-      hash = (hash << 5) - hash + item.charCodeAt(i);
+      hash = (hash << 5) - hash + item.charCodeAt(i); // алгоритм djb2
       hash = hash >>> 0;  // преобразование в 32-битное беззнаковое целое число
     }
     return Math.abs(hash % this.size) + 1;
@@ -18,14 +18,12 @@ class HashTable {
   seekSlot(item) {
 
     let slot = this.getHashFunction(item);
+    let count = 0;
 
     if (this.storage[slot]) {
       do {
-        slot += this.step;
 
-        if (slot > this.size) {
-          slot -= this.size;
-        }
+        slot = this.doSteps(slot, count);
 
       }
       while (this.storage[slot])
@@ -42,6 +40,21 @@ class HashTable {
 
   }
 
+  doSteps(slot, count) {
+    slot += this.step;
+    count ++;
+
+    if (slot > this.size) {
+      slot -= this.size;
+    }
+
+    if (count === this.size) {
+      return 'Slot not found'
+    }
+
+    return slot;
+  }
+
   find(item) {
     if (this.storage[this.getHashFunction(item)] && this.storage[this.getHashFunction(item)] === item) {
       return this.getHashFunction(item);
@@ -51,16 +64,8 @@ class HashTable {
       let slot = this.getHashFunction(item);
 
       do {
-          slot += this.step;
-          count ++;
 
-          if (slot > this.size) {
-            slot -= this.size;
-          }
-
-          if (count === this.size) {
-            return 'Элемент не найден'
-          }
+        slot = this.doSteps(slot, count);
 
       } while (this.storage[slot] !== item);
 
