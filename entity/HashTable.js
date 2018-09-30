@@ -71,7 +71,7 @@ class HashTable {
 
       return slot;
     } else {
-      return 'Элемент не найден'
+      return null;
     }
   }
 
